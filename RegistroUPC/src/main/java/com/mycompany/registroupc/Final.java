@@ -11,6 +11,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
+import java.util.regex.Pattern;
 import javax.swing.table.*;
 
 /**
@@ -148,10 +149,10 @@ public class Final extends javax.swing.JFrame {
         dispose();
 // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
-    
+
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
-        
+
         //cargar
         ArrayList<Object> equipos = new ArrayList<>();
 
@@ -171,118 +172,129 @@ public class Final extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error al cargar los equipos.");
             ex.printStackTrace();
         }
-            
- // Ventana 1
-    JFrame nuevaVentana = new JFrame();
-    nuevaVentana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    nuevaVentana.setSize(300, 350);
-    nuevaVentana.setLocationRelativeTo(null);
-    nuevaVentana.setTitle("Registrar Equipo");
-    nuevaVentana.setVisible(true);
-    nuevaVentana.setResizable(false);
-    nuevaVentana.setLayout(null);
 
-    
-    JLabel labelEquipoLocal = new JLabel("Equipo Local:");
-    labelEquipoLocal.setBounds(20, 20, 100, 30);
+        // Ventana 1
+        JFrame nuevaVentana = new JFrame();
+        nuevaVentana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        nuevaVentana.setSize(300, 350);
+        nuevaVentana.setLocationRelativeTo(null);
+        nuevaVentana.setTitle("Registrar Equipo");
+        nuevaVentana.setVisible(true);
+        nuevaVentana.setResizable(false);
+        nuevaVentana.setLayout(null);
 
-    JComboBox<String> comboBoxEquipoLocal = new JComboBox<>();
-    for (Object equipo : equipos) {
-        comboBoxEquipoLocal.addItem((String) equipo);
-    }
-    comboBoxEquipoLocal.setBounds(120, 20, 150, 30);
+        JLabel labelEquipoLocal = new JLabel("Equipo Local:");
+        labelEquipoLocal.setBounds(20, 20, 100, 30);
 
-    JLabel labelEquipoVisitante = new JLabel("Equipo Visitante:");
-    labelEquipoVisitante.setBounds(20, 60, 100, 30);
-
-    JComboBox<String> comboBoxEquipoVisitante = new JComboBox<>();
-    for (Object equipo : equipos) {
-        comboBoxEquipoVisitante.addItem((String) equipo);
-    }
-    comboBoxEquipoVisitante.setBounds(120, 60, 150, 30);
-
-    JLabel labelGolesLocal = new JLabel("Goles Local:");
-    labelGolesLocal.setBounds(20, 100, 100, 30);
-
-    JTextField textFieldGolesLocal = new JTextField();
-    textFieldGolesLocal.setBounds(120, 100, 150, 30);
-
-    JLabel labelGolesVisitante = new JLabel("Goles Visitante:");
-    labelGolesVisitante.setBounds(20, 140, 100, 30);
-
-    JTextField textFieldGolesVisitante = new JTextField();
-    textFieldGolesVisitante.setBounds(120, 140, 150, 30);
-
-    JLabel labelFecha = new JLabel("Fecha");
-    labelFecha.setBounds(20, 180, 100, 30);
-    
-    com.toedter.calendar.JDateChooser calen = new com.toedter.calendar.JDateChooser();
-    calen.setBounds(120, 180, 150, 30);
-    calen.setDateFormatString("dd/MM/yyyy");
-
-    JButton botonRegistrarPartido = new JButton("Registrar");
-    botonRegistrarPartido.setBounds(120, 220, 100, 30);
-
-    botonRegistrarPartido.addActionListener(new ActionListener() {
-        public void actionPerformed(ActionEvent e) {
-            String equipoLocal = (String) comboBoxEquipoLocal.getSelectedItem();
-            String equipoVisitante = (String) comboBoxEquipoVisitante.getSelectedItem();
-            int golesLocal, golesVisitante;
-
-            
-        String golesLocalTexto = textFieldGolesLocal.getText();
-        String golesVisitanteTexto = textFieldGolesVisitante.getText();
-        
-        // Verificar si los campos de texto no están vacíos
-        if (!golesLocalTexto.isEmpty() && !golesVisitanteTexto.isEmpty()) {
-            golesLocal = Integer.parseInt(golesLocalTexto);
-            golesVisitante = Integer.parseInt(golesVisitanteTexto);            
-            
-            
-            // aca se guarda la fecha obteniendola del jcalendar
-                    String fechaSeleccionada = "";
-                    if (calen.getDate() != null) {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                fechaSeleccionada = dateFormat.format(calen.getDate());
-            } 
-            
-            if (golesVisitante<0 || golesLocal<0){
-                JOptionPane.showMessageDialog(null, "Los goles no pueden ser negativos");
-            } else if (comboBoxEquipoLocal.getSelectedItem().equals(comboBoxEquipoVisitante.getSelectedItem())){
-                JOptionPane.showMessageDialog(null, "Verique, los equipos no pueden ser los mismos");
-            
-            } else {
-            try {
-                BufferedWriter writer = new BufferedWriter(new FileWriter("partidos.txt", true));
-                writer.write(equipoLocal + "," + equipoVisitante + "," + golesLocal + "," + golesVisitante + "," + fechaSeleccionada);
-                writer.newLine();
-                writer.close();
-
-                JOptionPane.showMessageDialog(nuevaVentana, "Partido registrado correctamente.");
-            } catch (IOException ex) {
-                JOptionPane.showMessageDialog(nuevaVentana, "Error al registrar el partido.", "Error", JOptionPane.ERROR_MESSAGE);
-                ex.printStackTrace();
-            }
-        
-            nuevaVentana.dispose();
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Campos vacios");
+        JComboBox<String> comboBoxEquipoLocal = new JComboBox<>();
+        for (Object equipo : equipos) {
+            comboBoxEquipoLocal.addItem((String) equipo);
         }
-        }
-    });
+        comboBoxEquipoLocal.setBounds(120, 20, 150, 30);
 
-    nuevaVentana.add(labelEquipoLocal);
-    nuevaVentana.add(comboBoxEquipoLocal);
-    nuevaVentana.add(labelEquipoVisitante);
-    nuevaVentana.add(comboBoxEquipoVisitante);
-    nuevaVentana.add(labelGolesLocal);
-    nuevaVentana.add(textFieldGolesLocal);
-    nuevaVentana.add(labelGolesVisitante);
-    nuevaVentana.add(textFieldGolesVisitante);
-    nuevaVentana.add(labelFecha);
-    nuevaVentana.add(calen);
-    nuevaVentana.add(botonRegistrarPartido);
+        JLabel labelEquipoVisitante = new JLabel("Equipo Visitante:");
+        labelEquipoVisitante.setBounds(20, 60, 100, 30);
+
+        JComboBox<String> comboBoxEquipoVisitante = new JComboBox<>();
+        for (Object equipo : equipos) {
+            comboBoxEquipoVisitante.addItem((String) equipo);
+        }
+        comboBoxEquipoVisitante.setBounds(120, 60, 150, 30);
+
+        JLabel labelGolesLocal = new JLabel("Goles Local:");
+        labelGolesLocal.setBounds(20, 100, 100, 30);
+
+        JTextField textFieldGolesLocal = new JTextField();
+        textFieldGolesLocal.setBounds(120, 100, 150, 30);
+
+        JLabel labelGolesVisitante = new JLabel("Goles Visitante:");
+        labelGolesVisitante.setBounds(20, 140, 100, 30);
+
+        JTextField textFieldGolesVisitante = new JTextField();
+        textFieldGolesVisitante.setBounds(120, 140, 150, 30);
+
+        JLabel labelFecha = new JLabel("Fecha");
+        labelFecha.setBounds(20, 180, 100, 30);
+
+        com.toedter.calendar.JDateChooser calen = new com.toedter.calendar.JDateChooser();
+        calen.setBounds(120, 180, 150, 30);
+        calen.setDateFormatString("dd/MM/yyyy");
+
+        JButton botonRegistrarPartido = new JButton("Registrar");
+        botonRegistrarPartido.setBounds(120, 220, 100, 30);
+
+        botonRegistrarPartido.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String equipoLocal = (String) comboBoxEquipoLocal.getSelectedItem();
+                String equipoVisitante = (String) comboBoxEquipoVisitante.getSelectedItem();
+                String golesLocalTexto = textFieldGolesLocal.getText();
+                String golesVisitanteTexto = textFieldGolesVisitante.getText();
+
+                if (!validarTextField(golesLocalTexto) || !validarTextField(golesVisitanteTexto)) {
+                    JOptionPane.showMessageDialog(null, "No deje espacios en blanco", "Advertencia", JOptionPane.OK_CANCEL_OPTION);
+                } else if (notieneNumeros(golesLocalTexto) || (notieneNumeros(golesVisitanteTexto))) {
+                    JOptionPane.showMessageDialog(null, "Solo Numeros", "Advertencia", JOptionPane.OK_CANCEL_OPTION);
+                } else {
+// Verificar si los campos de texto no están vacíos
+                    if (!validarEspecialInt(golesLocalTexto) || !validarEspecialInt(golesVisitanteTexto)) {
+                        JOptionPane.showMessageDialog(null, "verifique los goles", "Advertencia", JOptionPane.OK_CANCEL_OPTION);
+                        return;
+                    }
+
+                    int golesLocal, golesVisitante;
+                    try {
+                        golesLocal = Integer.parseInt(golesLocalTexto);
+                        golesVisitante = Integer.parseInt(golesVisitanteTexto);
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(null, "El campo ID contiene un número inválido.", "Advertencia",
+                                JOptionPane.OK_CANCEL_OPTION);
+                        return;
+                    }
+
+                    if (!golesLocalTexto.isEmpty() && !golesVisitanteTexto.isEmpty()) {
+                        // aca se guarda la fecha obteniendola del jcalendar
+                        String fechaSeleccionada = "";
+                        if (calen.getDate() != null) {
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                            fechaSeleccionada = dateFormat.format(calen.getDate());
+                        }
+
+                        if (golesVisitante < 0 || golesLocal < 0) {
+                            JOptionPane.showMessageDialog(null, "Los goles no pueden ser negativos", "Advertencia", JOptionPane.OK_CANCEL_OPTION);
+                        } else if (comboBoxEquipoLocal.getSelectedItem().equals(comboBoxEquipoVisitante.getSelectedItem())) {
+                            JOptionPane.showMessageDialog(null, "Verique, los equipos no pueden ser los mismos", "Advertencia", JOptionPane.OK_CANCEL_OPTION);
+                        } else {
+                            try {
+                                BufferedWriter writer = new BufferedWriter(new FileWriter("partidos.txt", true));
+                                writer.write(equipoLocal + "," + equipoVisitante + "," + golesLocal + "," + golesVisitante + "," + fechaSeleccionada);
+                                writer.newLine();
+                                writer.close();
+
+                                JOptionPane.showMessageDialog(nuevaVentana, "Partido registrado correctamente.");
+                            } catch (IOException ex) {
+                                JOptionPane.showMessageDialog(nuevaVentana, "Error al registrar el partido.", "Error", JOptionPane.ERROR_MESSAGE);
+                                ex.printStackTrace();
+                            }
+                            nuevaVentana.dispose();
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Campos vacios", "Advertencia", JOptionPane.OK_CANCEL_OPTION);
+                    }
+                }
+            }
+        });
+
+        nuevaVentana.add(labelEquipoLocal);
+        nuevaVentana.add(comboBoxEquipoLocal);
+        nuevaVentana.add(labelEquipoVisitante);
+        nuevaVentana.add(comboBoxEquipoVisitante);
+        nuevaVentana.add(labelGolesLocal);
+        nuevaVentana.add(textFieldGolesLocal);
+        nuevaVentana.add(labelGolesVisitante);
+        nuevaVentana.add(textFieldGolesVisitante);
+        nuevaVentana.add(labelFecha);
+        nuevaVentana.add(calen);
+        nuevaVentana.add(botonRegistrarPartido);
 
 
     }//GEN-LAST:event_jButton3ActionPerformed
@@ -389,86 +401,100 @@ public class Final extends javax.swing.JFrame {
 
         nuevaVentana.add(scrollPane);
 
-        nuevaVentana.setVisible(true);        
+        nuevaVentana.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
-        limpiarArchivos();    
+        limpiarArchivos();
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
-        
+
         switch (jComboBox1.getSelectedIndex()) {
-            case 1 ->                 {
-                    //crear la ventana
-                    JFrame nuevaVentana = new JFrame();
-                    //caracteristicas de la ventana
-                    nuevaVentana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    nuevaVentana.setSize(350, 220);
-                    nuevaVentana.setLocationRelativeTo(null);
-                    nuevaVentana.setTitle("Agregar Equipo");
-                    nuevaVentana.setVisible(true);
-                    nuevaVentana.setResizable(false);
-                    nuevaVentana.setLayout(null);
-                    //fin
-                    
-                    //incio(R) de label, text, etc
-                    JLabel labelID = new JLabel("ID:");
-                    labelID.setBounds(30, 20, 100, 30);
+            case 1 -> {
+                //crear la ventana
+                JFrame nuevaVentana = new JFrame();
+                //caracteristicas de la ventana
+                nuevaVentana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                nuevaVentana.setSize(350, 220);
+                nuevaVentana.setLocationRelativeTo(null);
+                nuevaVentana.setTitle("Agregar Equipo");
+                nuevaVentana.setVisible(true);
+                nuevaVentana.setResizable(false);
+                nuevaVentana.setLayout(null);
+                //fin
 
-                    JTextField textFieldID = new JTextField();
-                    textFieldID.setBounds(170, 20, 150, 30);
+                //incio(R) de label, text, etc
+                JLabel labelID = new JLabel("ID:");
+                labelID.setBounds(30, 20, 100, 30);
 
-                    JLabel labelNombreEquipo = new JLabel("Nombre Equipo:");
-                    labelNombreEquipo.setBounds(30, 60, 100, 30);
+                JTextField textFieldID = new JTextField();
+                textFieldID.setBounds(170, 20, 150, 30);
 
-                    JTextField textFieldNombreEquipo = new JTextField();
-                    textFieldNombreEquipo.setBounds(170, 60, 150, 30);
+                JLabel labelNombreEquipo = new JLabel("Nombre Equipo:");
+                labelNombreEquipo.setBounds(30, 60, 100, 30);
 
-                    JLabel labelNombreEntrenador = new JLabel("Nombre Entrenador:");
-                    labelNombreEntrenador.setBounds(30, 100, 120, 30);
-                    
-                    JTextField textFieldNombreEntrenador = new JTextField();
-                    textFieldNombreEntrenador.setBounds(170, 100, 150, 30);
+                JTextField textFieldNombreEquipo = new JTextField();
+                textFieldNombreEquipo.setBounds(170, 60, 150, 30);
 
-                    JButton botonGuardar = new JButton("Guardar");
-                    botonGuardar.setBounds(120, 140, 100, 30);
-                    
-                    //eventos 
-                    botonGuardar.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            String id = textFieldID.getText();
-                            String nombreEquipo = textFieldNombreEquipo.getText();
-                            String nombreEntrenador = textFieldNombreEntrenador.getText();
-                            
-                                if (existeID(id)) {
-                                    JOptionPane.showMessageDialog(null, "El ID ya esta en uso. Inténtalo con otro.");
-                                return;
-                                
-                                }else if (notieneNumeros(id)){
-                                    JOptionPane.showMessageDialog(null, "El ID no puede tener Letras");
-                                }else if (tieneNumeros(nombreEntrenador)){
-                                    JOptionPane.showMessageDialog(null, "El nombre del entrenador no puede contener numeros");
-                                }
-                                
-                                else {
-                                    try {
+                JLabel labelNombreEntrenador = new JLabel("Nombre Entrenador:");
+                labelNombreEntrenador.setBounds(30, 100, 120, 30);
 
-                                        BufferedWriter writer = new BufferedWriter(new FileWriter("datos.txt", true));
-                                        writer.write(id + "," + nombreEquipo + "," + nombreEntrenador);
-                                        writer.newLine();
-                                        writer.close();
-                                        JOptionPane.showMessageDialog(nuevaVentana, "Datos guardados correctamente.");
-                                    } catch (IOException ex) {
-                                        JOptionPane.showMessageDialog(nuevaVentana, "Error al guardar los datos.", "Error", JOptionPane.ERROR_MESSAGE);
-                                        ex.printStackTrace();
-                                    }
-                                
-                            nuevaVentana.dispose();
-                            }
+                JTextField textFieldNombreEntrenador = new JTextField();
+                textFieldNombreEntrenador.setBounds(170, 100, 150, 30);
+
+                JButton botonGuardar = new JButton("Guardar");
+                botonGuardar.setBounds(120, 140, 100, 30);
+
+                //eventos 
+                botonGuardar.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        String id = textFieldID.getText();
+
+                        if (!validarEspecialInt(id)) {
+                            JOptionPane.showMessageDialog(null, "El campo ID solo debe contener números.", "Advertencia", JOptionPane.OK_CANCEL_OPTION);
+                            return;
                         }
+
+                        int ids;
+                        try {
+                            ids = Integer.parseInt(id);
+                        } catch (NumberFormatException ex) {
+                            JOptionPane.showMessageDialog(null, "El campo ID contiene un número inválido.", "Advertencia",
+                                    JOptionPane.OK_CANCEL_OPTION);
+                            return;
+                        }
+                        String nombreEquipo = textFieldNombreEquipo.getText();
+                        String nombreEntrenador = textFieldNombreEntrenador.getText();
+
+                        if (!validarEspecial(nombreEntrenador) || !validarEspecial(nombreEquipo)) {
+                            JOptionPane.showMessageDialog(null, "No se permiten caracteres especiales", "Advertencia", JOptionPane.OK_CANCEL_OPTION);
+                        } else if (existeID(id)) {
+                            JOptionPane.showMessageDialog(null, "El ID ya esta en uso. Inténtalo con otro.", "Advertencia", JOptionPane.OK_CANCEL_OPTION);
+                            return;
+                        } else if (tieneNumeros(nombreEntrenador)) {
+                            JOptionPane.showMessageDialog(null, "El nombre del entrenador no puede contener numeros", "Advertencia", JOptionPane.OK_CANCEL_OPTION);
+                        } else if (!validarTextField(nombreEntrenador) || !validarTextField(nombreEquipo)) {
+                            JOptionPane.showMessageDialog(null, "No deje espacios en blanco", "Advertencia", JOptionPane.OK_CANCEL_OPTION);
+
+                        } else {
+                            try {
+
+                                BufferedWriter writer = new BufferedWriter(new FileWriter("datos.txt", true));
+                                writer.write(id + "," + nombreEquipo + "," + nombreEntrenador);
+                                writer.newLine();
+                                writer.close();
+                                JOptionPane.showMessageDialog(nuevaVentana, "Datos guardados correctamente.");
+                            } catch (IOException ex) {
+                                JOptionPane.showMessageDialog(nuevaVentana, "Error al guardar los datos.", "Error", JOptionPane.ERROR_MESSAGE);
+                                ex.printStackTrace();
+                            }
+
+                            nuevaVentana.dispose();
+                        }
+                    }
 
                     private boolean existeID(String id) {
                         try {
@@ -476,7 +502,7 @@ public class Final extends javax.swing.JFrame {
                             String line;
                             while ((line = reader.readLine()) != null) {
                                 String[] datos = line.split(",");
-                                
+
                                 if (datos.length >= 1 && datos[0].equals(id)) {
                                     reader.close();
                                     return true;
@@ -486,216 +512,238 @@ public class Final extends javax.swing.JFrame {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        return false; 
+                        return false;
                     }
 
-                    });
-                    
-                    //parte obligatoria para que lo creado en inicio(R) funcione
-                    nuevaVentana.add(labelID);
-                    nuevaVentana.add(textFieldID);
-                    nuevaVentana.add(labelNombreEquipo);
-                    nuevaVentana.add(textFieldNombreEquipo);
-                    nuevaVentana.add(labelNombreEntrenador);
-                    nuevaVentana.add(textFieldNombreEntrenador);
-                    nuevaVentana.add(botonGuardar);
-                    
-                }
-            
-            case 2 ->                 {
-                    JFrame nuevaVentana = new JFrame();
-                    nuevaVentana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    nuevaVentana.setSize(320, 230);
-                    nuevaVentana.setLocationRelativeTo(null);
-                    nuevaVentana.setTitle("Editar Equipo");
-                    nuevaVentana.setVisible(true);
-                    nuevaVentana.setResizable(false);
-                    nuevaVentana.setLayout(null); 
-                    
-                    JLabel labelID = new JLabel("ID:");
-                    labelID.setBounds(20, 20, 100, 30);
-                    
-                    JTextField textFieldID = new JTextField();
-                    textFieldID.setBounds(120, 20, 150, 30);
-                    
-                    JLabel labelNombreEquipo = new JLabel("Nombre Equipo:");
-                    labelNombreEquipo.setBounds(20, 60, 100, 30);
-                    
-                    JTextField textFieldNombreEquipo = new JTextField();
-                    textFieldNombreEquipo.setBounds(120, 60, 150, 30);
-                    
-                    JLabel labelNombreEntrenador = new JLabel("Nombre Entrenador:");
-                    labelNombreEntrenador.setBounds(20, 100, 100, 30);
-                    
-                    JTextField textFieldNombreEntrenador = new JTextField();
-                    textFieldNombreEntrenador.setBounds(120, 100, 150, 30);
-                    
-                    JButton botonEditar = new JButton("Editar");
-                    botonEditar.setBounds(120, 140, 100, 30);
-                    
+                });
 
-                    //eventos
-                    botonEditar.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            String id = textFieldID.getText();
-                            String nombreEquipo = textFieldNombreEquipo.getText();
-                            String nombreEntrenador = textFieldNombreEntrenador.getText();
+                //parte obligatoria para que lo creado en inicio(R) funcione
+                nuevaVentana.add(labelID);
+                nuevaVentana.add(textFieldID);
+                nuevaVentana.add(labelNombreEquipo);
+                nuevaVentana.add(textFieldNombreEquipo);
+                nuevaVentana.add(labelNombreEntrenador);
+                nuevaVentana.add(textFieldNombreEntrenador);
+                nuevaVentana.add(botonGuardar);
+            }
+
+            case 2 -> {
+                JFrame nuevaVentana = new JFrame();
+                nuevaVentana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                nuevaVentana.setSize(320, 230);
+                nuevaVentana.setLocationRelativeTo(null);
+                nuevaVentana.setTitle("Editar Equipo");
+                nuevaVentana.setVisible(true);
+                nuevaVentana.setResizable(false);
+                nuevaVentana.setLayout(null);
+
+                JLabel labelID = new JLabel("ID:");
+                labelID.setBounds(20, 20, 100, 30);
+
+                JTextField textFieldID = new JTextField();
+                textFieldID.setBounds(120, 20, 150, 30);
+
+                JLabel labelNombreEquipo = new JLabel("Nombre Equipo:");
+                labelNombreEquipo.setBounds(20, 60, 100, 30);
+
+                JTextField textFieldNombreEquipo = new JTextField();
+                textFieldNombreEquipo.setBounds(120, 60, 150, 30);
+
+                JLabel labelNombreEntrenador = new JLabel("Nombre Entrenador:");
+                labelNombreEntrenador.setBounds(20, 100, 100, 30);
+
+                JTextField textFieldNombreEntrenador = new JTextField();
+                textFieldNombreEntrenador.setBounds(120, 100, 150, 30);
+
+                JButton botonEditar = new JButton("Editar");
+                botonEditar.setBounds(120, 140, 100, 30);
+
+                //eventos
+                botonEditar.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        String id = textFieldID.getText();
+                        String nombreEquipo = textFieldNombreEquipo.getText();
+                        String nombreEntrenador = textFieldNombreEntrenador.getText();
+
+                        
+                        try {
+                            File inputFile = new File("datos.txt");
+                            File tempFile = new File("temp.txt");
+
+                            BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+                            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+                            String line;
+                            boolean encontrado = false;
+
+                            while ((line = reader.readLine()) != null) {
+                                String[] datos = line.split(",");
+                                if (datos.length >= 3 && datos[0].equals(id)) {
+                                    datos[1] = nombreEquipo;
+                                    datos[2] = nombreEntrenador;
+                                    line = String.join(",", datos);
+                                    encontrado = true;
+                                }
+                                writer.write(line + System.lineSeparator());
+                            }
+
+                            reader.close();
+                            writer.close();
                             
-                            try {
-                                File inputFile = new File("datos.txt");
-                                File tempFile = new File("temp.txt");
-                                
-                                BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-                                BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-                                
-                                String line;
-                                boolean encontrado = false;
-                                
-                                while ((line = reader.readLine()) != null) {
-                                    String[] datos = line.split(",");
-                                    if (datos.length >= 3 && datos[0].equals(id)) {
-                                        datos[1] = nombreEquipo;
-                                        datos[2] = nombreEntrenador;
-                                        line = String.join(",", datos);
-                                        encontrado = true;
-                                    }
-                                    writer.write(line + System.lineSeparator());
-                                }
-                                
-                                reader.close();
-                                writer.close();
-                                
-                                if (encontrado) {
-                                    inputFile.delete();
-                                    tempFile.renameTo(inputFile);
-                                    JOptionPane.showMessageDialog(nuevaVentana, "Equipo editado correctamente.");
-                                } else {
-                                    JOptionPane.showMessageDialog(nuevaVentana, "No se encontró un equipo con el ID proporcionado.");
-                                }
-                            } catch (IOException ex) {
-                                JOptionPane.showMessageDialog(nuevaVentana, "Error al editar el equipo.");
-                                ex.printStackTrace();
+                        if (nombreEquipo.isEmpty() || nombreEntrenador.isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "Por favor, ingrese un nombre de equipo y un nombre de entrenador.");
+                            return; 
                             }
-
-                            nuevaVentana.dispose();
-                        }
-                    });    
-                    nuevaVentana.add(labelID);
-                    nuevaVentana.add(textFieldID);
-                    nuevaVentana.add(labelNombreEquipo);
-                    nuevaVentana.add(textFieldNombreEquipo);
-                    nuevaVentana.add(labelNombreEntrenador);
-                    nuevaVentana.add(textFieldNombreEntrenador);
-                    nuevaVentana.add(botonEditar);
-                }
-            case 3 ->                 {
-                    JFrame nuevaVentana = new JFrame();
-                    nuevaVentana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    nuevaVentana.setSize(300, 150);
-                    nuevaVentana.setLocationRelativeTo(null);
-                    nuevaVentana.setTitle("Eliminar Equipo");
-                    nuevaVentana.setVisible(true);
-                    nuevaVentana.setResizable(false);
-                    nuevaVentana.setLayout(null); 
-                    
-                    JLabel labelID = new JLabel("ID:");
-                    labelID.setBounds(20, 20, 100, 30);
-                    
-                    JTextField textFieldID = new JTextField();
-                    textFieldID.setBounds(120, 20, 150, 30);
-                    
-                    JButton botonEliminar = new JButton("Eliminar");
-                    botonEliminar.setBounds(120, 60, 100, 30);
-                    //eventos
-                    botonEliminar.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            String id = textFieldID.getText();
+                        if (!validarEspecial(nombreEntrenador) || !validarEspecial(nombreEquipo)) {
+                            JOptionPane.showMessageDialog(null, "No se permiten caracteres especiales", "Advertencia", JOptionPane.OK_CANCEL_OPTION);
+                        } else if (tieneNumeros(nombreEntrenador)) {
+                            JOptionPane.showMessageDialog(null, "El nombre del entrenador no puede contener numeros", "Advertencia", JOptionPane.OK_CANCEL_OPTION);
+                        } else {                    
                             
-                            try {
-                                File inputFile = new File("datos.txt");
-                                File tempFile = new File("temp.txt");
-                                
-                                BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-                                BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
-                                
-                                String linea;
-                                boolean encontrado = false;
-                                
-                                while ((linea = reader.readLine()) != null) {
-                                    String[] datos = linea.split(",");
-                                    if (datos.length >= 1 && datos[0].equals(id)) {
-                                        encontrado = true;
-                                        continue;
-                                    }
-                                    writer.write(linea + System.lineSeparator());
-                                }
-                                
-                                reader.close();
-                                writer.close();
-                                
-                                if (encontrado) {
-                                    inputFile.delete();
-                                    tempFile.renameTo(inputFile);
-                                    JOptionPane.showMessageDialog(nuevaVentana, "Equipo eliminado correctamente.");
-                                } else {
-                                    JOptionPane.showMessageDialog(nuevaVentana, "No se encontró un equipo con el ID proporcionado.", "Error", JOptionPane.ERROR_MESSAGE);
-                                }
-                            } catch (IOException ex) {
-                                JOptionPane.showMessageDialog(nuevaVentana, "Error al eliminar el equipo.");
-                                ex.printStackTrace();
-                            }
-
-                            nuevaVentana.dispose();
-                        }
-                    });    
-                    nuevaVentana.add(labelID);
-                    nuevaVentana.add(textFieldID);
-                    nuevaVentana.add(botonEliminar);
-                }
-            case 4 ->               {
-                    
-                    JFrame nuevaVentana = new JFrame();
-                    nuevaVentana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    nuevaVentana.setSize(600, 400);
-                    nuevaVentana.setLocationRelativeTo(null);
-                    nuevaVentana.setTitle("Lista de Equipos");
-                    nuevaVentana.setVisible(true);
-                    nuevaVentana.setResizable(false);
-                    nuevaVentana.setLayout(null); 
-                    
-                    DefaultTableModel tableModel = new DefaultTableModel();
-                    tableModel.addColumn("ID");
-                    tableModel.addColumn("Nombre Equipo");
-                    tableModel.addColumn("Nombre Entrenador");
-
-                    try (BufferedReader reader = new BufferedReader(new FileReader("datos.txt"))) {
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            String[] datos = line.split(",");
-                            if (datos.length >= 3) {
-                                tableModel.addRow(datos);
+                            if (encontrado) {
+                                inputFile.delete();
+                                tempFile.renameTo(inputFile);
+                                JOptionPane.showMessageDialog(nuevaVentana, "Equipo editado correctamente.");
+                                nuevaVentana.dispose();
+                            } else {
+                                JOptionPane.showMessageDialog(nuevaVentana, "No se encontró un equipo con el ID proporcionado.");
                             }
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        } catch (IOException ex) {
+                            JOptionPane.showMessageDialog(nuevaVentana, "Error al editar el equipo.");
+                            ex.printStackTrace();
+                        }
+
+                        
                     }
+                });
+                nuevaVentana.add(labelID);
+                nuevaVentana.add(textFieldID);
+                nuevaVentana.add(labelNombreEquipo);
+                nuevaVentana.add(textFieldNombreEquipo);
+                nuevaVentana.add(labelNombreEntrenador);
+                nuevaVentana.add(textFieldNombreEntrenador);
+                nuevaVentana.add(botonEditar);
+            }
+            case 3 -> {
+                JFrame nuevaVentana = new JFrame();
+                nuevaVentana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                nuevaVentana.setSize(300, 150);
+                nuevaVentana.setLocationRelativeTo(null);
+                nuevaVentana.setTitle("Eliminar Equipo");
+                nuevaVentana.setVisible(true);
+                nuevaVentana.setResizable(false);
+                nuevaVentana.setLayout(null);
 
-                    JTable table = new JTable(tableModel);
-                    
+                JLabel labelID = new JLabel("ID:");
+                labelID.setBounds(20, 20, 100, 30);
 
-                        JScrollPane scrollPane = new JScrollPane(table);
-                        scrollPane.setBounds(20, 20, 560, 320);
+                JTextField textFieldID = new JTextField();
+                textFieldID.setBounds(120, 20, 150, 30);
 
-                        nuevaVentana.add(scrollPane);
+                JButton botonEliminar = new JButton("Eliminar");
+                botonEliminar.setBounds(120, 60, 100, 30);
+                //eventos
+                botonEliminar.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        String id = textFieldID.getText();
 
-                        nuevaVentana.setVisible(true);
+                        try {
+                            File inputFile = new File("datos.txt");
+                            File tempFile = new File("temp.txt");
+
+                            BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+                            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+                            String linea;
+                            boolean encontrado = false;
+
+                            while ((linea = reader.readLine()) != null) {
+                                String[] datos = linea.split(",");
+                                if (datos.length >= 1 && datos[0].equals(id)) {
+                                    encontrado = true;
+                                    continue;
+                                }
+                                writer.write(linea + System.lineSeparator());
+                            }
+
+                            reader.close();
+                            writer.close();
+
+                            if (encontrado) {
+                                inputFile.delete();
+                                tempFile.renameTo(inputFile);
+                                JOptionPane.showMessageDialog(nuevaVentana, "Equipo eliminado correctamente.");
+                            } else {
+                                JOptionPane.showMessageDialog(nuevaVentana, "No se encontró un equipo con el ID proporcionado.", "Error", JOptionPane.ERROR_MESSAGE);
+                            }
+                        } catch (IOException ex) {
+                            JOptionPane.showMessageDialog(nuevaVentana, "Error al eliminar el equipo.");
+                            ex.printStackTrace();
+                        }
+
+                        nuevaVentana.dispose();
+                    }
+                });
+                nuevaVentana.add(labelID);
+                nuevaVentana.add(textFieldID);
+                nuevaVentana.add(botonEliminar);
+            }
+            case 4 -> {
+
+                JFrame nuevaVentana = new JFrame();
+                nuevaVentana.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                nuevaVentana.setSize(600, 400);
+                nuevaVentana.setLocationRelativeTo(null);
+                nuevaVentana.setTitle("Lista de Equipos");
+                nuevaVentana.setVisible(true);
+                nuevaVentana.setResizable(false);
+                nuevaVentana.setLayout(null);
+
+                DefaultTableModel tableModel = new DefaultTableModel();
+                tableModel.addColumn("ID");
+                tableModel.addColumn("Nombre Equipo");
+                tableModel.addColumn("Nombre Entrenador");
+
+                try (BufferedReader reader = new BufferedReader(new FileReader("datos.txt"))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        String[] datos = line.split(",");
+                        if (datos.length >= 3) {
+                            tableModel.addRow(datos);
+                        }
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+
+                JTable table = new JTable(tableModel);
+
+                JScrollPane scrollPane = new JScrollPane(table);
+                scrollPane.setBounds(20, 20, 560, 320);
+
+                nuevaVentana.add(scrollPane);
+
+                nuevaVentana.setVisible(true);
+            }
             default -> {
             }
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
-    
-            private static boolean notieneNumeros(String cadena) {
+
+    private static boolean validarEspecial(String texto) {
+        return !Pattern.matches(".*[^a-zA-Z0-9 ].*", texto);
+    }
+
+    private static boolean validarEspecialInt(String texto) {
+        return texto.matches("[0-9]+");
+    }
+
+    private static boolean validarTextField(String texto) {
+        return !texto.contains(" ") && !Pattern.matches(".*[^a-zA-Z0-9 ].*", texto);
+    }
+
+    private static boolean notieneNumeros(String cadena) {
         for (char c : cadena.toCharArray()) {
             if (Character.isLetter(c)) {
                 return true;
@@ -703,7 +751,8 @@ public class Final extends javax.swing.JFrame {
         }
         return false;
     }
-            private static boolean tieneNumeros(String cadena) {
+
+    private static boolean tieneNumeros(String cadena) {
         for (char c : cadena.toCharArray()) {
             if (Character.isDigit(c)) {
                 return true;
@@ -711,17 +760,17 @@ public class Final extends javax.swing.JFrame {
         }
         return false;
     }
-    
+
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
         // TODO add your handling code here:
         System.exit(0);
 
     }//GEN-LAST:event_jLabel2MouseClicked
-    
-        public boolean isCellEditable(int row, int column) {
-            return false;
+
+    public boolean isCellEditable(int row, int column) {
+        return false;
     }
-    
+
     private void limpiarArchivos() {
         limpiarArchivo("partidos.txt");
     }
@@ -737,7 +786,6 @@ public class Final extends javax.swing.JFrame {
             e.printStackTrace();
         }
     }
-    
 
     /**
      * @param args the command line arguments
